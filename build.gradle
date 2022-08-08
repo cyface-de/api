@@ -1,0 +1,197 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
+/*
+ * Copyright 2020-2022 Cyface GmbH
+ *
+ * This file is part of the Cyface API Library.
+ *
+ *  The Cyface API Library is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  The Cyface API Library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with the Cyface API Library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/**
+ * The build gradle file for the Cyface API Library.
+ *
+ * @author Armin Schnabel
+ * @version 1.0.0
+ * @since 1.0.0
+ */
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+}
+
+plugins {
+  id 'eclipse'
+  id 'idea'
+  //noinspection SpellCheckingInspection
+  id 'com.github.johnrengelman.shadow' version '6.1.0' apply false
+  id "com.github.spotbugs" version "4.7.1" apply false
+  // Plugin to display the Gradle task graph
+  //noinspection SpellCheckingInspection
+  id 'org.barfuin.gradle.taskinfo' version '1.0.5'
+}
+
+allprojects {
+  repositories {
+    mavenCentral()
+  }
+}
+
+subprojects {
+  apply plugin: 'maven-publish'
+  apply plugin: 'com.github.spotbugs'
+  apply plugin: 'jacoco'
+  apply plugin: 'checkstyle'
+  apply plugin: 'pmd'
+  apply plugin: 'java'
+
+  group = 'de.cyface'
+  version = '0.0.0'
+
+  tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    checkstyle {
+      toolVersion = '8.31'
+      // use one common config file for all subprojects
+      configFile = project(':').file("config/checkstyle/checkstyle.xml")
+      //noinspection SpellCheckingInspection
+      configProperties = ["suppressionFile": project(':').file("config/checkstyle/suppressions.xml")]
+      ignoreFailures = true
+      showViolations = true
+    }
+  }
+
+  ext {
+    vertxVersion = '4.3.2'
+    slf4jVersion = '1.7.29'
+    commonsLangVersion = '3.12.0'
+    cyfaceSerializationVersion = '2.2.1'
+    gradleWrapperVersion = '6.8.3'
+
+    // Versions of testing dependencies
+    junitVersion = '5.7.2'
+    mockitoVersion = '3.3.3'
+    hamcrestVersion = '2.2'
+    flapdoodleVersion = '3.4.5'
+
+    jacocoVersion = '0.8.5'
+    spotBugsPluginVersion = '1.11.0'
+  }
+
+  wrapper {
+    gradleVersion = "$gradleWrapperVersion"
+  }
+
+  dependencies {
+    // Testing Dependencies
+    testImplementation(platform("org.junit:junit-bom:$junitVersion"))
+    testImplementation "org.junit.jupiter:junit-jupiter-params"  // Required for parameterized tests
+    testImplementation "org.hamcrest:hamcrest:$hamcrestVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+    spotbugsPlugins "com.h3xstream.findsecbugs:findsecbugs-plugin:$spotBugsPluginVersion"
+  }
+
+  test {
+    useJUnitPlatform()
+    testLogging {
+      events "passed", "skipped", "failed"
+
+      // Also show assert message (e.g. on the CI) when tests fail to identify cause
+      showExceptions true
+      exceptionFormat "full"
+      showCauses true
+      showStackTraces true
+      showStandardStreams = false
+    }
+  }
+
+  jacoco {
+    toolVersion = "$jacocoVersion"
+    reportsDir = file("$buildDir/reports/jacoco")
+  }
+
+  jacocoTestReport {
+    reports {
+      xml.enabled true
+      csv.enabled true
+      html.destination file("${buildDir}/reports/jacocoHtml")
+    }
+  }
+
+  spotbugs {
+    toolVersion = '4.2.3'
+    ignoreFailures = true
+    excludeFilter = file("$rootProject.projectDir/config/spotbugs/excludeFilter.xml")
+  }
+
+  tasks.withType(SpotBugsTask) {
+    reports {
+      xml.enabled = false
+      html.enabled = true
+    }
+    //pluginClasspath = project.configurations.spotbugsPlugins
+  }
+
+  pmd {
+    toolVersion = '6.22.0'
+    incrementalAnalysis = true
+    ruleSetFiles = project(':').files('config/pmd.xml')
+    rulePriority = 4
+    ruleSets = []
+    // There are so many violations and currently it is not really important in this application.
+    ignoreFailures = true
+  }
+
+  // Definitions for the maven-publish Plugin
+  publishing {
+    // The following repositories are used to publish artifacts to.
+    repositories {
+      maven {
+        name = 'github'
+        url = uri("https://maven.pkg.github.com/cyface-de/api")
+        credentials {
+          username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+          password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+        }
+      }
+      maven {
+        name = 'local'
+        url = "file://${rootProject.buildDir}/repo"
+      }
+    }
+  }
+
+  // The following repositories are used to load artifacts from.
+  repositories {
+    maven {
+      name = 'local'
+      url = "file://${rootProject.buildDir}/repo"
+    }
+    maven {
+      name = "github"
+      url = uri("https://maven.pkg.github.com/cyface-de/serializer")
+      credentials {
+        username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+        password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+      }
+    }
+  }
+}
