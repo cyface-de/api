@@ -35,7 +35,6 @@ import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.streams.ReadStream;
 
-// TODO: Probably remove this, as it is not necessary for data collection
 /**
  * This class represents a stream of {@code Measurement}s with lazy-load.
  * <p>

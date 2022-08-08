@@ -31,7 +31,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 
-// TODO: Probably remove this, as it is not necessary for data collection
 /**
  * Loads deserialized measurements from the database for a vert.x context.
  *

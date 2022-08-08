@@ -20,7 +20,6 @@ package de.cyface.api.model;
 
 import io.vertx.core.json.JsonObject;
 
-// TODO: This should probably be deleted or go into some other project.
 /**
  * An interface for {@link ClassifiedSegment} based factories.
  *

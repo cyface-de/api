@@ -18,7 +18,6 @@
  */
 package de.cyface.api.model;
 
-// TODO: This should probably be deleted or go into some other project.
 /**
  * A provider which returns a factory based on a {@link Mode}.
  *
