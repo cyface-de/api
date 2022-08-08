@@ -211,16 +211,13 @@ public abstract class Authorizer implements Handler<RoutingContext> {
         return promise.future();
     }
 
-    // TODO: @Armin: Why is this here and not inside the UserRetriever (since it retrieves users).
     /**
      * Loads all users a specific group manager can access.
-     * <p>
-     * This method is only public because of the `backend/AuthorizationTest`, see last comment on CY-5720.
      *
      * @param groupManager The {@code Role} group manager to load the users for
      * @return The {@link User}s which the {@code groupManager} can access
      */
-    public Future<List<User>> loadAccessibleUsers(final Role groupManager) {
+    Future<List<User>> loadAccessibleUsers(final Role groupManager) {
         Validate.isTrue(groupManager.getType().equals(Role.Type.GROUP_MANAGER));
         Validate.notEmpty(groupManager.getGroup());
 
