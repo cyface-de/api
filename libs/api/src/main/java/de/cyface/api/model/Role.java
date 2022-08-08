@@ -48,6 +48,7 @@ public class Role {
      * @param type The {@link Type} of this role. Only {@link Type#GUEST} roles are allowed without group. Use
      *            {@link Role(Type, String)} for other roles.
      */
+    @SuppressWarnings("unused") // Part of the API
     public Role(final Type type) {
         Validate.isTrue(type.equals(Type.GUEST), String.format("Guest role expected, but is: %s", type));
         this.type = type;

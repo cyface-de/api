@@ -5,7 +5,7 @@ image:https://github.com/cyface-de/api/workflows/Cyface%20API/badge.svg[link="ht
 
 This library is used by the Cyface Vert.X APIs like the https:///github.com/cyface-de/data-collector[Cyface Data Collector] software.
 
-It contains share code required by most of the APIs, like authentication and setup.
+It contains shared code required by most of the APIs, like authentication and setup.
 
 If you require this software under a closed source license for you own projects, please https://www.cyface.de/#kontakt[contact us].
 
