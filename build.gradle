@@ -22,7 +22,7 @@ import com.github.spotbugs.snom.SpotBugsTask
  * The build gradle file for the Cyface API Library.
  *
  * @author Armin Schnabel
- * @version 1.0.0
+ * @version 1.1.0
  * @since 1.0.0
  */
 buildscript {
@@ -55,9 +55,10 @@ subprojects {
   apply plugin: 'checkstyle'
   apply plugin: 'pmd'
   apply plugin: 'java'
+  apply plugin: 'java-library'
 
   group = 'de.cyface'
-  version = '1.0.0-alpha1'
+  version = '1.0.0-alpha2'
 
   tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
@@ -98,6 +99,9 @@ subprojects {
   }
 
   dependencies {
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "org.apache.commons:commons-lang3:$commonsLangVersion"
+
     // Testing Dependencies
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testImplementation "org.junit.jupiter:junit-jupiter-params"  // Required for parameterized tests
@@ -191,6 +195,31 @@ subprojects {
       credentials {
         username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
         password = project.findProperty("gpr.key") ?: System.getenv("PASSWORD")
+      }
+    }
+  }
+
+  // The following needs to be wrapped in afterEvaluate. I have no idea why, but the solution is described here: https://github.com/akhikhl/gretty/issues/306
+  project.afterEvaluate {
+
+    java {
+      withJavadocJar()
+      withSourcesJar()
+    }
+
+    // Publish sources
+    task sourceJar(type: Jar) {
+      from sourceSets.main.allJava
+    }
+
+    // This is the configuration of the maven-publish plugin. It defines a publication
+    publishing {
+      publications {
+        //noinspection GroovyAssignabilityCheck
+        myLibrary(MavenPublication) {
+          //noinspection GroovyAssignabilityCheck
+          from components.java
+        }
       }
     }
   }

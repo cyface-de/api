@@ -17,8 +17,7 @@
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-include ':libs'
-include ':libs:api'
-include ':libs:api-test-environment'
+include ':api'
+include ':api-test-environment'
 
 rootProject.name = 'api'
