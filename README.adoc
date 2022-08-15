@@ -1,0 +1,88 @@
+= API Library
+
+image:https://img.shields.io/badge/vert.x-4.3.2-purple.svg[link="https://vertx.io"]
+image:https://github.com/cyface-de/api/workflows/Cyface%20API/badge.svg[link="https://github.com/cyface-de/api/actions"]
+
+This library is used by the Cyface Vert.X APIs like the https:///github.com/cyface-de/data-collector[Cyface Data Collector] software.
+
+It contains shared code required by most of the APIs, like authentication and setup.
+
+If you require this software under a closed source license for you own projects, please https://www.cyface.de/#kontakt[contact us].
+
+Changes between versions are found in the link:https://github.com/cyface-de/api/releases[Release Section].
+
+The project uses link:https://gradle.org/[Gradle] as the build system.
+It is set up as a Gradle multi project build.
+There is one general categories of sub-projects.
+The libraries shared by several Cyface executables which are grouped in `libs`.
+The following sections provide an overview about those projects.
+
+== Overview
+
+.link:#_libraries[Libraries]
+* link:#_api[API]
+* link:#_api-test-environment[API Test Environment]
+
+.General information
+* link:#_release_a_new_version[Release a new Version]
+* link:#_publishing_artifacts_to_github_packages_manually[Publishing Artifacts to GitHub Packages manually]
+* link:#_licensing[Licensing]
+
+
+== Libraries
+
+[#_api]
+=== API
+
+Vert.X classes shared between multiple Cyface Vert.X API projects.
+
+[#_api-test-environment]
+=== API Test Environment
+
+Vert.X test classes shared between multiple Cyface Vert.X API projects.
+
+
+[#_release_a_new_version]
+== Release a new Version
+
+See https://github.com/cyface-de/data-collector#release-a-new-version[Cyface Collector Readme]
+
+* Increment the `version` in the `build.gradle`
+* After pushing the release tag to Github the CI automatically builds the artifacts and marks the release on Github
+
+
+[#_publishing_artifacts_to_github_packages_manually]
+== Publishing artifacts to GitHub Packages manually
+
+The artifacts produced by this project are distributed via link:https://github.com/features/packages[GitHubPackages].
+Before you can publish artifacts you need to rename `gradle.properties.template` to `gradle.properties` and enter your GitHub credentials.
+How to obtain these credentials is described link:https://help.github.com/en/github/managing-packages-with-github-packages/about-github-packages#about-tokens[here].
+
+To publish a new version of an artifact you need to:
+
+1. Increase the version number of the sub-project within the `build.gradle` file
+2. Call `./gradlew publish`
+
+This will upload a new artifact to GitHub packages with the new version.
+GitHub Packages will not accept to overwrite an existing version or to upload a lower version.
+This project uses link:https://semver.org/[semantic versioning].
+
+
+[#_licensing]
+== Licensing
+Copyright 2018-2022 Cyface GmbH
+
+This file is part of the Cyface API Library.
+
+The Cyface API Library is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+The Cyface API Library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with the Cyface API Library.  If not, see http://www.gnu.org/licenses/.
