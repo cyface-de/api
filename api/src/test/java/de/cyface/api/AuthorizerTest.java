@@ -172,7 +172,7 @@ public class AuthorizerTest {
         }
 
         @Override
-        protected void handleAuthorizedRequest(RoutingContext ctx, Set<User> users, MultiMap header) {
+        protected void handleAuthorizedRequest(RoutingContext ctx, User user, Set<User> users, MultiMap header) {
             // Nothing to do
         }
     }
