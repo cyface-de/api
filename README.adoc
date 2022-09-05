@@ -13,7 +13,7 @@ Changes between versions are found in the link:https://github.com/cyface-de/api/
 
 The project uses link:https://gradle.org/[Gradle] as the build system.
 It is set up as a Gradle multi project build.
-There is one general categories of sub-projects.
+There is one general categories of subprojects.
 The libraries shared by several Cyface executables which are grouped in `libs`.
 The following sections provide an overview about those projects.
 
@@ -60,7 +60,7 @@ How to obtain these credentials is described link:https://help.github.com/en/git
 
 To publish a new version of an artifact you need to:
 
-1. Increase the version number of the sub-project within the `build.gradle` file
+1. Increase the version number of the subproject within the `build.gradle` file
 2. Call `./gradlew publish`
 
 This will upload a new artifact to GitHub packages with the new version.
