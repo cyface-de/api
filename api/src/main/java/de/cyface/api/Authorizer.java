@@ -109,19 +109,26 @@ public abstract class Authorizer implements Handler<RoutingContext> {
             // Before async operations, pause request body parsing to not lose the body or protocol upgrades.
             strategy.pause(request);
             final var authentication = authProvider.authenticate(principal);
-            authentication.onSuccess(user -> {
+            authentication.onSuccess(authUser -> {
                 try {
                     strategy.resume(request);
 
                     // Before async operations, pause request body parsing to not lose the body or protocol upgrades.
                     strategy.pause(request);
                     // Load principal from authentication result, so it also contains the roles
-                    final var loadUsers = loadAccessibleUsers(user.principal());
+                    final var loadUsers = loadAccessibleUsers(authUser.principal());
                     loadUsers.onSuccess(accessibleUsers -> {
                         try {
                             strategy.resume(request);
+
+                            // Find authenticated user
+                            final var match = accessibleUsers.stream().filter(u -> u.getName().equals(username))
+                                    .collect(Collectors.toList());
+                            Validate.isTrue(match.size() == 1);
+                            final var user = match.get(0);
+
                             LOGGER.trace("Request for {} authorized to access users {}", username, accessibleUsers);
-                            handleAuthorizedRequest(context, accessibleUsers, headers);
+                            handleAuthorizedRequest(context, user, accessibleUsers, headers);
                         } catch (RuntimeException e) {
                             context.fail(e);
                         }
@@ -147,11 +154,13 @@ public abstract class Authorizer implements Handler<RoutingContext> {
     /**
      * This is the method that should be implemented by subclasses to carry out the business logic on an authorized
      * request.
-     *  @param ctx Vert.x request context
-     * @param users A list of usernames for which the request is authorized to export data
+     *
+     * @param ctx Vert.x request context.
+     * @param user The currently authenticated user.
+     * @param users A list of users for which the authenticated user has access to.
      * @param header the header of the request which may contain parameters required to process the request.
      */
-    protected abstract void handleAuthorizedRequest(final RoutingContext ctx, final Set<User> users,
+    protected abstract void handleAuthorizedRequest(final RoutingContext ctx, final User user, final Set<User> users,
             final MultiMap header);
 
     /**

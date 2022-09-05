@@ -288,7 +288,7 @@ public class AuthorizationTest {
         }
 
         @Override
-        protected void handleAuthorizedRequest(final RoutingContext ctx, final Set<User> users,
+        protected void handleAuthorizedRequest(final RoutingContext ctx, final User user, final Set<User> users,
                 final MultiMap header) {
             // Nothing to do
         }
