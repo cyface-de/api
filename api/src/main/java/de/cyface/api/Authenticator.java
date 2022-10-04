@@ -21,6 +21,7 @@ package de.cyface.api;
 import static io.vertx.ext.auth.impl.jose.JWS.RS256;
 
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 
 import org.apache.commons.lang3.Validate;
@@ -48,7 +49,7 @@ import io.vertx.ext.web.handler.LoggerHandler;
  *
  * @author Klemens Muthmann
  * @author Armin Schnabel
- * @version 4.0.2
+ * @version 4.0.3
  * @since 1.0.0
  */
 public final class Authenticator implements Handler<RoutingContext> {
@@ -100,7 +101,7 @@ public final class Authenticator implements Handler<RoutingContext> {
      *            a certain server installation or a certain part of an application
      * @param tokenValidationTime The number of seconds the JWT authentication token is valid after login.
      */
-    private Authenticator(final MongoAuthentication authProvider,
+    protected Authenticator(final MongoAuthentication authProvider,
             final JWTAuth jwtAuthProvider, final String issuer, final String audience,
             final int tokenValidationTime) {
         Objects.requireNonNull(authProvider, "Parameter authProvider may not be null!");
@@ -120,26 +121,31 @@ public final class Authenticator implements Handler<RoutingContext> {
     public void handle(final RoutingContext ctx) {
         try {
             final var body = ctx.body().asJsonObject();
-            LOGGER.debug("Receiving authentication request for user {}", body.getString("username"));
-            final var authentication = authProvider.authenticate(body);
+            // Ensure username, e.g. email-address, is not case-sensitive
+            final var caseSensitiveUsername = body.getString("username");
+            final var username = caseSensitiveUsername.toLowerCase(Locale.GERMANY);
+            final var password = body.getString("password");
+            final var credentials = new JsonObject().put("username", username).put("password", password);
+            LOGGER.debug("Receiving authentication request for user {}", username);
+            final var authentication = authProvider.authenticate(credentials);
             authentication.onSuccess(user -> {
                 try {
                     final var principal = user.principal();
                     if (activated(principal)) {
-                        LOGGER.debug("Authentication successful for user {}", body.getString("username"));
+                        LOGGER.debug("Authentication successful for user {}", username);
 
                         final var jwtOptions = new JWTOptions()
                                 .setAlgorithm(JWT_HASH_ALGORITHM)
                                 .setExpiresInSeconds(tokenValidationTime)
                                 .setIssuer(issuer)
                                 .setAudience(Collections.singletonList(audience));
-                        final var jwtBody = body.put("aud", audience).put("iss", issuer);
+                        final var jwtBody = credentials.put("aud", audience).put("iss", issuer);
                         final var generatedToken = jwtAuthProvider.generateToken(jwtBody, jwtOptions);
                         LOGGER.trace("New JWT Token: {}", generatedToken);
 
                         ctx.response().putHeader("Authorization", generatedToken).setStatusCode(200).end();
                     } else {
-                        LOGGER.error("Authentication failed, user not activated: {}", body.getString("username"));
+                        LOGGER.error("Authentication failed, user not activated: {}", username);
                         ctx.fail(428);
                     }
                 } catch (RuntimeException e) {
@@ -147,7 +153,7 @@ public final class Authenticator implements Handler<RoutingContext> {
                 }
             });
             authentication.onFailure(e -> {
-                LOGGER.error("Unsuccessful authentication request for user {}", body.getString("username"));
+                LOGGER.error("Unsuccessful authentication request for user {}", username);
                 ctx.fail(401, e);
             });
         } catch (DecodeException e) {
@@ -176,8 +182,9 @@ public final class Authenticator implements Handler<RoutingContext> {
      * @param router The router to set up authentication on
      * @param config The HTTP server configuration parameters required
      */
+    @SuppressWarnings("unused") // Part of the API
     public static void setupAuthentication(final String loginEndpoint, final Router router,
-            final AuthenticatedEndpointConfig config) {
+                                           final AuthenticatedEndpointConfig config) {
         final var authenticator = new Authenticator(config.getAuthProvider(),
                 config.getJwtAuthProvider(), config.getIssuer(), config.getAudience(),
                 config.getTokenExpirationTime());

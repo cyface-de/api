@@ -21,15 +21,23 @@ package de.cyface.api;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.*;
 
+import io.vertx.core.Future;
+import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonObject;
+import io.vertx.ext.auth.jwt.JWTAuth;
+import io.vertx.ext.auth.mongo.MongoAuthentication;
+import io.vertx.ext.web.RequestBody;
+import io.vertx.ext.web.RoutingContext;
 import org.junit.jupiter.api.Test;
 
 /**
  * This class checks the inner workings of the {@link Authenticator}.
  *
  * @author Armin Schnabel
- * @version 1.0.0
+ * @author Klemens Muthmann
+ * @version 1.1.0
  * @since 1.0.0
  */
 @SuppressWarnings({"SpellCheckingInspection"})
@@ -54,5 +62,37 @@ public class AuthenticatorTest {
         assertThat("Check activation", registeredResult, is(equalTo(false)));
         assertThat("Check activation", activatedResult, is(equalTo(true)));
         assertThat("Check activation", createdResult, is(equalTo(true)));
+    }
+
+    /**
+     * Checks that usernames are handled ignoring letter casing.
+     */
+    @Test
+    void testUsernameIsCaseInsensitive() {
+        // Arrange
+        final var mockAuthentication = mock(MongoAuthentication.class);
+        final var mockAuthProvider = mock(JWTAuth.class);
+        final var issuer = "de.cyface";
+        final var audience = "de.cyface.api";
+        final var tokenValidationTime = 1000;
+        final var mockContext = mock(RoutingContext.class);
+        final var mockResponse = mock(HttpServerResponse.class);
+        final var mockBody = mock(RequestBody.class);
+        final var mockAuthenticationResult = mock(Future.class);
+        final var testCredentials = new JsonObject().put("username", "Username").put("password", "password");
+        final var expectedCredentials = new JsonObject().put("username", "username").put("password", "password");
+
+        when(mockContext.response()).thenReturn(mockResponse);
+        when(mockContext.body()).thenReturn(mockBody);
+        when(mockBody.asJsonObject()).thenReturn(testCredentials);
+        when(mockAuthentication.authenticate(any(JsonObject.class))).thenReturn(mockAuthenticationResult);
+
+        final var oocut = new Authenticator(mockAuthentication, mockAuthProvider, issuer, audience, tokenValidationTime);
+
+        // Act
+        oocut.handle(mockContext);
+
+        // Assert
+        verify(mockAuthentication).authenticate(eq(expectedCredentials));
     }
 }
