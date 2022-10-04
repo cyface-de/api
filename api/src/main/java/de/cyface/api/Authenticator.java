@@ -101,7 +101,7 @@ public final class Authenticator implements Handler<RoutingContext> {
      *            a certain server installation or a certain part of an application
      * @param tokenValidationTime The number of seconds the JWT authentication token is valid after login.
      */
-    private Authenticator(final MongoAuthentication authProvider,
+    protected Authenticator(final MongoAuthentication authProvider,
             final JWTAuth jwtAuthProvider, final String issuer, final String audience,
             final int tokenValidationTime) {
         Objects.requireNonNull(authProvider, "Parameter authProvider may not be null!");
