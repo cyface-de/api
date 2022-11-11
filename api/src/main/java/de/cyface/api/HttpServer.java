@@ -18,6 +18,7 @@
  */
 package de.cyface.api;
 
+import io.vertx.core.http.HttpServerOptions;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +65,9 @@ public class HttpServer {
         Validate.notNull(router);
         Validate.notNull(startPromise);
 
-        vertx.createHttpServer().requestHandler(router).listen(port,
+        final var options = new HttpServerOptions();
+        options.setCompressionSupported(true);
+        vertx.createHttpServer(options).requestHandler(router).listen(port,
                 serverStartup -> completeStartup(serverStartup, startPromise));
     }
 
