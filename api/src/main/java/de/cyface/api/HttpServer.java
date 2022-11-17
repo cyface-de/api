@@ -18,7 +18,8 @@
  */
 package de.cyface.api;
 
-import io.vertx.core.http.HttpServerOptions;
+import java.util.Collections;
+
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,15 +27,17 @@ import org.slf4j.LoggerFactory;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Router;
 
 /**
  * A wrapper which starts the {@code HttpServer} for {@code ApiVerticle}s.
  *
  * @author Armin Schnabel
- * @version 1.0.1
+ * @version 1.0.2
  * @since 1.0.0
  */
+@SuppressWarnings("unused") // Part of the API
 public class HttpServer {
 
     /**
@@ -50,6 +53,7 @@ public class HttpServer {
     /**
      * @param port The port on which the HTTP server should listen
      */
+    @SuppressWarnings("unused") // Part of the API
     public HttpServer(final int port) {
         this.port = port;
     }
@@ -61,14 +65,21 @@ public class HttpServer {
      * @param router The router for all the endpoints the HTTP server should serve
      * @param startPromise Informs the caller about the successful or failed start of the server
      */
+    @SuppressWarnings("unused") // Part of the API
     public void start(final Vertx vertx, final Router router, final Promise<Void> startPromise) {
         Validate.notNull(router);
         Validate.notNull(startPromise);
 
         final var options = new HttpServerOptions();
         options.setCompressionSupported(true);
-        vertx.createHttpServer(options).requestHandler(router).listen(port,
-                serverStartup -> completeStartup(serverStartup, startPromise));
+        // Make server respond with one of the sub-protocols sent by our client, in our case: ['Bearer', 'eyToken***'].
+        // When the server does not respond with one of both options, the websocket client won't accept the connection.
+        // The protocol name "Bearer" is made up, but injecting the auth token via protocol is a common workaround
+        // for the issue that the Javascript Websocket class does not allow to add an `Authorization` header [RFR-165].
+        options.setWebSocketSubProtocols(Collections.singletonList("Bearer"));
+        vertx.createHttpServer(options)
+                .requestHandler(router)
+                .listen(port, serverStartup -> completeStartup(serverStartup, startPromise));
     }
 
     /**
