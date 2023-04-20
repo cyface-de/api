@@ -1,7 +1,7 @@
 = API Library
 
 image:https://img.shields.io/badge/vert.x-4.3.2-purple.svg[link="https://vertx.io"]
-image:https://github.com/cyface-de/api/workflows/Cyface%20API/badge.svg[link="https://github.com/cyface-de/api/actions"]
+image:https://github.com/cyface-de/api/actions/workflows/gradle_build.yml/badge.svg[link="https://github.com/cyface-de/api/actions"]
 
 This library is used by the Cyface Vert.X APIs like the https:///github.com/cyface-de/data-collector[Cyface Data Collector] software.
 
@@ -47,8 +47,12 @@ Vert.X test classes shared between multiple Cyface Vert.X API projects.
 
 See https://github.com/cyface-de/data-collector#release-a-new-version[Cyface Collector Readme]
 
-* Increment the `version` in the `build.gradle`
-* After pushing the release tag to Github the CI automatically builds the artifacts and marks the release on Github
+* `version` in root `build.gradle` is automatically set by the CI
+* Just tag the release and push the tag to Github
+* The Github package is automatically published when a new version is tagged and pushed by our
+https://github.com/cyface-de/api/actions[Github Actions] to
+the https://github.com/cyface-de/api/packages[Github Registry]
+* The tag is automatically marked as a 'new Release' on https://github.com/cyface-de/api/releases[Github]
 
 
 [#_publishing_artifacts_to_github_packages_manually]
@@ -70,7 +74,7 @@ This project uses link:https://semver.org/[semantic versioning].
 
 [#_licensing]
 == Licensing
-Copyright 2018-2022 Cyface GmbH
+Copyright 2018-2023 Cyface GmbH
 
 This file is part of the Cyface API Library.
 
