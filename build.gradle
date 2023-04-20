@@ -1,7 +1,7 @@
 import com.github.spotbugs.snom.SpotBugsTask
 
 /*
- * Copyright 2020-2022 Cyface GmbH
+ * Copyright 2020-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -35,11 +35,11 @@ plugins {
   id 'eclipse'
   id 'idea'
   //noinspection SpellCheckingInspection
-  id 'com.github.johnrengelman.shadow' version '6.1.0' apply false
-  id "com.github.spotbugs" version "4.7.1" apply false
+  id 'com.github.johnrengelman.shadow' version '7.1.2' apply false
+  id "com.github.spotbugs" version "4.7.5" apply false
   // Plugin to display the Gradle task graph
   //noinspection SpellCheckingInspection
-  id 'org.barfuin.gradle.taskinfo' version '1.0.5'
+  id 'org.barfuin.gradle.taskinfo' version '2.1.0'
 }
 
 allprojects {
@@ -78,20 +78,22 @@ subprojects {
   }
 
   ext {
-    vertxVersion = '4.3.2'
-    slf4jVersion = '1.7.29'
+    vertxVersion = '4.4.0'
+    slf4jVersion = '2.0.7'
     commonsLangVersion = '3.12.0'
-    cyfaceSerializationVersion = '2.2.1'
-    gradleWrapperVersion = '6.8.3'
+    cyfaceSerializationVersion = '2.3.5'
+    gradleWrapperVersion = '7.6.1'
 
     // Versions of testing dependencies
-    junitVersion = '5.7.2'
-    mockitoVersion = '3.3.3'
+    junitVersion = '5.9.2'
+    mockitoVersion = '5.2.0'
     hamcrestVersion = '2.2'
-    flapdoodleVersion = '3.4.5'
+    flapdoodleVersion = '3.5.3' // major upgrade available
 
-    jacocoVersion = '0.8.5'
-    spotBugsPluginVersion = '1.11.0'
+    jacocoVersion = '0.8.9'
+    spotBugsPluginVersion = '1.12.0'
+    spotbugsToolsVersion = '4.7.3'
+    pmdToolsVersion = '6.55.0'
   }
 
   wrapper {
@@ -141,7 +143,7 @@ subprojects {
   }
 
   spotbugs {
-    toolVersion = '4.2.3'
+    toolVersion = "$spotbugsToolsVersion"
     ignoreFailures = true
     excludeFilter = file("$rootProject.projectDir/config/spotbugs/excludeFilter.xml")
   }
@@ -155,10 +157,10 @@ subprojects {
   }
 
   pmd {
-    toolVersion = '6.22.0'
+    toolVersion = "$pmdToolsVersion"
     incrementalAnalysis = true
     ruleSetFiles = project(':').files('config/pmd.xml')
-    rulePriority = 4
+    rulesMinimumPriority = 4
     ruleSets = []
     // There are so many violations and currently it is not really important in this application.
     ignoreFailures = true
