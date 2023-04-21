@@ -1,6 +1,6 @@
 = API Library
 
-image:https://img.shields.io/badge/vert.x-4.4.0-purple.svg[link="https://vertx.io"]
+image:https://img.shields.io/badge/vert.x-4.3.6-purple.svg[link="https://vertx.io"]
 image:https://github.com/cyface-de/api/actions/workflows/gradle_build.yml/badge.svg[link="https://github.com/cyface-de/api/actions"]
 
 This library is used by the Cyface Vert.X APIs like the https:///github.com/cyface-de/data-collector[Cyface Data Collector] software.
