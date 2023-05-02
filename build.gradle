@@ -81,7 +81,7 @@ subprojects {
     // If you increase this version, check if the `collector.GridFSStorageIT` breaks
     // There is a bug up to version 4.4.1, scheduled to be fixed in 4.4.2
     // https://github.com/vert-x3/vertx-mongo-client/issues/291
-    vertxVersion = '4.3.6'
+    vertxVersion = '4.4.1' // FIXME: Don't release yet as this version does not work with collector.
     slf4jVersion = '2.0.7'
     commonsLangVersion = '3.12.0'
     cyfaceSerializationVersion = '2.3.5'
