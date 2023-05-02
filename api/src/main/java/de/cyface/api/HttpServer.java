@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Cyface GmbH
+ * Copyright 2020-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -34,7 +34,7 @@ import io.vertx.ext.web.Router;
  * A wrapper which starts the {@code HttpServer} for {@code ApiVerticle}s.
  *
  * @author Armin Schnabel
- * @version 1.0.2
+ * @version 1.1.0
  * @since 1.0.0
  */
 @SuppressWarnings("unused") // Part of the API
@@ -59,7 +59,9 @@ public class HttpServer {
     }
 
     /**
-     * Starts the HTTP server provided by this application. This server runs the Cyface Collector REST-API.
+     * Starts the HTTP server provided by this application.
+     * <p>
+     * This server runs the Cyface Collector REST-API.
      *
      * @param vertx The Vertx instance to get the parameters from
      * @param router The router for all the endpoints the HTTP server should serve
@@ -67,9 +69,22 @@ public class HttpServer {
      */
     @SuppressWarnings("unused") // Part of the API
     public void start(final Vertx vertx, final Router router, final Promise<Void> startPromise) {
-        Validate.notNull(router);
-        Validate.notNull(startPromise);
+        final var options = new HttpServerOptions();
+        options.setCompressionSupported(true);
+        start(vertx, router, startPromise, options);
+    }
 
+    /**
+     * Starts the HTTP server provided by this application with WebSocket support.
+     * <p>
+     * This server runs the Cyface Collector REST-API.
+     *
+     * @param vertx The Vertx instance to get the parameters from
+     * @param router The router for all the endpoints the HTTP server should serve
+     * @param startPromise Informs the caller about the successful or failed start of the server
+     */
+    @SuppressWarnings("unused") // Part of the API
+    public void startWithWebSocket(final Vertx vertx, final Router router, final Promise<Void> startPromise) {
         final var options = new HttpServerOptions();
         options.setCompressionSupported(true);
         // Make server respond with one of the sub-protocols sent by our client, in our case: ['Bearer', 'eyToken***'].
@@ -77,6 +92,23 @@ public class HttpServer {
         // The protocol name "Bearer" is made up, but injecting the auth token via protocol is a common workaround
         // for the issue that the Javascript Websocket class does not allow to add an `Authorization` header [RFR-165].
         options.setWebSocketSubProtocols(Collections.singletonList("Bearer"));
+        options.setRegisterWebSocketWriteHandlers(true);
+        start(vertx, router, startPromise, options);
+    }
+
+    /**
+     * Starts the HTTP server provided by this application.
+     * <p>
+     * This server runs the Cyface Collector REST-API.
+     *
+     * @param vertx The Vertx instance to get the parameters from
+     * @param router The router for all the endpoints the HTTP server should serve
+     * @param startPromise Informs the caller about the successful or failed start of the server
+     * @param options The options for the Http server.
+     */
+    private void start(final Vertx vertx, final Router router, final Promise<Void> startPromise, final HttpServerOptions options) {
+        Validate.notNull(router);
+        Validate.notNull(startPromise);
         vertx.createHttpServer(options)
                 .requestHandler(router)
                 .listen(port, serverStartup -> completeStartup(serverStartup, startPromise));
