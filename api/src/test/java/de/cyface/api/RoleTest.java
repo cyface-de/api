@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Cyface GmbH
+ * Copyright 2022-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -35,7 +35,7 @@ import de.cyface.api.model.Role;
  * Tests whether the roles constructions from database values works as expected.
  *
  * @author Armin Schnabel
- * @version 1.0.1
+ * @version 1.1.0
  * @since 1.0.0
  */
 @SuppressWarnings({"SpellCheckingInspection"})
@@ -50,7 +50,7 @@ public class RoleTest {
         final var oocut = new Role(parameters.databaseValue);
 
         // Assert
-        assertThat(oocut, is(equalTo(parameters.expectedResult)));
+        assertThat(oocut, is(equalTo(parameters.role)));
     }
 
     @Test
@@ -61,6 +61,23 @@ public class RoleTest {
     @Test
     void test_groupWithoutType_throwsException() {
         Assertions.assertThrows(IllegalArgumentException.class, () -> new Role("project"));
+    }
+
+    @ParameterizedTest
+    @MethodSource("testParameters")
+    void testDatabaseIdentifier_happyPath(final TestParameters parameters) {
+        // Arrange
+
+        // Act
+        final var oocut = parameters.role;
+
+        // Assert
+        assertThat(oocut.databaseIdentifier(), is(equalTo(parameters.databaseValue)));
+    }
+
+    @Test
+    void testDatabaseIdentifier_userTypeWithEmptyGroup_throwsException() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> new Role(Role.Type.GROUP_USER, ""));
     }
 
     @SuppressWarnings("unused")
@@ -75,11 +92,11 @@ public class RoleTest {
 
     private static class TestParameters {
         String databaseValue;
-        Role expectedResult;
+        Role role;
 
-        public TestParameters(String databaseValue, Role expectedResult) {
+        public TestParameters(String databaseValue, Role role) {
             this.databaseValue = databaseValue;
-            this.expectedResult = expectedResult;
+            this.role = role;
         }
     }
 }
