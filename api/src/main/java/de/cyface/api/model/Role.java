@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Cyface GmbH
+ * Copyright 2022-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -28,7 +28,7 @@ import de.cyface.api.DatabaseConstants;
  * This class represents a user role of a specific {@link Type}.
  *
  * @author Armin Schnabel
- * @version 1.1.1
+ * @version 1.2.0
  * @since 1.0.0
  */
 public class Role {
@@ -98,6 +98,23 @@ public class Role {
             this.group = Validate.notEmpty(group);
         } else {
             throw new IllegalArgumentException(String.format("Unknown role format: %s", databaseValue));
+        }
+    }
+
+    /**
+     * @return the value which represents the role in the database
+     */
+    public String databaseIdentifier() {
+        if (type.equals(Type.ADMIN) || type.equals(Type.GUEST)) {
+            return type.toString().toLowerCase();
+        } else {
+            Validate.notEmpty(group);
+            if (type.equals(Type.GROUP_USER)) {
+                return String.format("%s%s", group, DatabaseConstants.USER_GROUP_ROLE_SUFFIX);
+            } else if (type.equals(Type.GROUP_MANAGER)) {
+                return String.format("%s%s", group, DatabaseConstants.GROUP_MANAGER_ROLE_SUFFIX);
+            }
+            throw new IllegalArgumentException(String.format("Unknown role with type %s and group %s", type, group));
         }
     }
 
