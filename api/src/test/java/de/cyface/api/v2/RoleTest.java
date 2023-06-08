@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api;
+package de.cyface.api.v2;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import de.cyface.api.model.Role;
+import de.cyface.api.v2.model.Role;
 
 /**
  * Tests whether the roles constructions from database values works as expected.

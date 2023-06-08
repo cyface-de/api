@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Cyface GmbH
+ * Copyright 2022-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -19,17 +19,16 @@
 package de.cyface.api;
 
 import io.vertx.core.http.HttpServerRequest;
-import io.vertx.ext.web.RoutingContext;
 
 /**
- * The interface for pause and resume strategies to be used which wraps async calls in
- * {@link Authorizer#handle(RoutingContext)}.
+ * The interface for pause and resume strategies to be used which wraps async calls, e.g. in
+ * {@code Authorizer#handle(RoutingContext)}.
  * <p>
  * Use {@link PauseAndResumeBeforeBodyParsing} when the `BodyHandler` is not executed before that handler [DAT-749] or
  * {@link PauseAndResumeAfterBodyParsing} otherwise.
  *
  * @author Armin Schnabel
- * @version 1.0.1
+ * @version 1.0.2
  * @since 1.0.0
  */
 public interface PauseAndResumeStrategy {

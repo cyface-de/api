@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api;
+package de.cyface.api.v2;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.cyface.api.model.User;
+import de.cyface.api.v2.model.User;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;

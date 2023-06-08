@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api;
+package de.cyface.api.v2;
 
 import static io.vertx.ext.auth.mongo.MongoAuthorization.DEFAULT_ROLE_FIELD;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -31,6 +31,8 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import de.cyface.api.DatabaseConstants;
+import de.cyface.api.PauseAndResumeAfterBodyParsing;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,8 +42,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import de.cyface.api.model.Role;
-import de.cyface.api.model.User;
+import de.cyface.api.v2.model.Role;
+import de.cyface.api.v2.model.User;
 import io.vertx.core.Future;
 import io.vertx.core.MultiMap;
 import io.vertx.core.json.JsonArray;

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api;
+package de.cyface.api.v2;
 
 import static io.vertx.ext.auth.mongo.MongoAuthorization.DEFAULT_ROLE_FIELD;
 import static io.vertx.ext.auth.mongo.MongoAuthorization.DEFAULT_USERNAME_FIELD;
@@ -27,12 +27,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.cyface.api.DatabaseConstants;
+import de.cyface.api.PauseAndResumeStrategy;
+import de.cyface.api.v2.model.Role;
+import de.cyface.api.v2.model.User;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import de.cyface.api.model.Role;
-import de.cyface.api.model.User;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.MultiMap;
@@ -161,7 +163,7 @@ public abstract class Authorizer implements Handler<RoutingContext> {
      * @param header the header of the request which may contain parameters required to process the request.
      */
     protected abstract void handleAuthorizedRequest(final RoutingContext ctx, final User user, final Set<User> users,
-            final MultiMap header);
+                                                    final MultiMap header);
 
     /**
      * Loads all users which the authenticated {@code User} can access.

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api.model;
+package de.cyface.api.v2.model;
 
 import io.vertx.core.json.JsonObject;
 import org.bson.types.ObjectId;
