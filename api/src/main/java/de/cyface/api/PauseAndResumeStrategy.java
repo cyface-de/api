@@ -22,7 +22,7 @@ import io.vertx.core.http.HttpServerRequest;
 
 /**
  * The interface for pause and resume strategies to be used which wraps async calls, e.g. in
- * {@code Authorizer#handle(RoutingContext)}.
+ * {@code AuthorizationHandler}s in APIs which use this library (e.g. collector, incentives).
  * <p>
  * Use {@link PauseAndResumeBeforeBodyParsing} when the `BodyHandler` is not executed before that handler [DAT-749] or
  * {@link PauseAndResumeAfterBodyParsing} otherwise.

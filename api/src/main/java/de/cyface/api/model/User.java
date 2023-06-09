@@ -32,6 +32,7 @@ import io.vertx.core.json.JsonObject;
  * @version 2.0.0
  * @since 1.0.0
  */
+@SuppressWarnings("unused") // Part of the API (e.g. used by collector, incentives)
 public class User {
 
     /**

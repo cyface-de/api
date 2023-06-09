@@ -28,7 +28,7 @@ import de.cyface.api.DatabaseConstants;
  * This class represents a user role of a specific {@link Type}.
  *
  * @author Armin Schnabel
- * @version 1.2.0
+ * @version 1.2.1
  * @since 1.0.0
  */
 public class Role {

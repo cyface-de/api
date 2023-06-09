@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Cyface GmbH
+ * Copyright 2019-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -50,7 +50,7 @@ import io.vertx.ext.web.RoutingContext;
  * This class ensures that such requests are properly authorized.
  *
  * @author Armin Schnabel
- * @version 2.0.2
+ * @version 2.0.3
  * @since 1.0.0
  */
 public abstract class Authorizer implements Handler<RoutingContext> {
