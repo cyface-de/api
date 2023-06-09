@@ -21,7 +21,6 @@ dependencies {
   // Test Dependencies
   implementation "org.junit.jupiter:junit-jupiter:$junitVersion"
   implementation "org.junit.jupiter:junit-jupiter-params:$junitVersion"
-  implementation "org.hamcrest:hamcrest:$hamcrestVersion"
   implementation "org.mockito:mockito-core:$mockitoVersion"
   implementation "io.vertx:vertx-junit5:$vertxVersion"
   implementation "io.vertx:vertx-web-client:$vertxVersion"

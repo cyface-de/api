@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api.model;
+package de.cyface.api.v2.model;
 
 import java.util.Objects;
 
@@ -28,7 +28,7 @@ import de.cyface.api.DatabaseConstants;
  * This class represents a user role of a specific {@link Type}.
  *
  * @author Armin Schnabel
- * @version 1.2.0
+ * @version 1.2.1
  * @since 1.0.0
  */
 public class Role {

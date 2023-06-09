@@ -38,5 +38,4 @@ dependencies {
   testImplementation project(':api-test-environment')
   testImplementation "io.vertx:vertx-junit5:$vertxVersion"
   testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
-  implementation "org.hamcrest:hamcrest:$hamcrestVersion"
 }

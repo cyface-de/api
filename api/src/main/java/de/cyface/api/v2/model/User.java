@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Cyface GmbH
+ * Copyright 2022 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -16,29 +16,28 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api.model;
-
-import static io.vertx.ext.auth.mongo.MongoAuthorization.DEFAULT_USERNAME_FIELD;
-
-import java.util.Objects;
-import java.util.UUID;
+package de.cyface.api.v2.model;
 
 import io.vertx.core.json.JsonObject;
+import org.bson.types.ObjectId;
+
+import java.util.Objects;
+
+import static io.vertx.ext.auth.mongo.MongoAuthorization.DEFAULT_USERNAME_FIELD;
 
 /**
  * This class represents a user.
  *
  * @author Armin Schnabel
- * @version 2.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
-@SuppressWarnings("unused") // Part of the API (e.g. used by collector, incentives)
 public class User {
 
     /**
      * The identifier of the {@link User}.
      */
-    private final UUID id;
+    private final ObjectId id;
     /**
      * The username of the {link User}.
      */
@@ -47,10 +46,10 @@ public class User {
     /**
      * Constructs a fully initialized instance of this class.
      *
-     * @param id The identifier of the {@link User}.
+     * @param id   The identifier of the {@link User}.
      * @param name The username of the {link User}.
      */
-    public User(final UUID id, final String name) {
+    public User(final ObjectId id, final String name) {
         this.id = id;
         this.name = name;
     }
@@ -61,7 +60,7 @@ public class User {
      * @param databaseValue A role entry from the database.
      */
     public User(final JsonObject databaseValue) {
-        this.id = UUID.fromString(databaseValue.getString("_id"));
+        this.id = new ObjectId(databaseValue.getString("_id"));
         this.name = databaseValue.getString(DEFAULT_USERNAME_FIELD);
     }
 
@@ -69,7 +68,7 @@ public class User {
      * @return The identifier of the {@link User}.
      */
     @SuppressWarnings("unused") // Part of the API
-    public UUID getId() {
+    public ObjectId getId() {
         return id;
     }
 
@@ -102,7 +101,7 @@ public class User {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        User user = (User)o;
+        User user = (User) o;
         return id.equals(user.id) && name.equals(user.name);
     }
 

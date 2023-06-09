@@ -16,11 +16,10 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api;
+package de.cyface.api.v2;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,8 +38,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import de.cyface.api.model.Role;
-import de.cyface.api.model.User;
+import de.cyface.api.AuthenticatedEndpointConfig;
+import de.cyface.api.DatabaseConstants;
+import de.cyface.api.EndpointConfig;
+import de.cyface.api.PauseAndResumeAfterBodyParsing;
+import de.cyface.api.v2.model.Role;
+import de.cyface.api.v2.model.User;
 import de.cyface.apitestutils.TestMongoDatabase;
 import de.cyface.apitestutils.fixture.user.DirectTestUser;
 import de.cyface.apitestutils.fixture.user.TestUser;
@@ -138,9 +141,9 @@ public class AuthorizationTest {
 
                         // Assert
                         final var expectedUsernames = env.getExpectedUsernames();
-                        assertThat(users, hasSize(expectedUsernames.size()));
-                        assertThat(users.stream().map(User::getName).collect(Collectors.toList()),
-                                hasItems(expectedUsernames.toArray(new String[0])));
+                        assertEquals(expectedUsernames.size(), users.size());
+                        assertArrayEquals(expectedUsernames.toArray(new String[0]),
+                                users.stream().map(User::getName).toArray());
                         testContext.completeNow();
                     }));
                     loadUsers.onFailure(testContext::failNow);
@@ -179,9 +182,9 @@ public class AuthorizationTest {
                         // Assert
                         final var expectedUsernames = List
                                 .of(new String[] {groupUser.getUsername(), groupManager.getUsername()});
-                        assertThat(users, hasSize(expectedUsernames.size()));
-                        assertThat(users.stream().map(User::getName).collect(Collectors.toList()),
-                                hasItems(expectedUsernames.toArray(new String[0])));
+                        assertEquals(expectedUsernames.size(), users.size());
+                        assertArrayEquals(expectedUsernames.toArray(new String[0]),
+                                users.stream().map(User::getName).toArray());
                         testContext.completeNow();
                     }));
                     loadUsers.onFailure(testContext::failNow);

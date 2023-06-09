@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Cyface GmbH - All Rights Reserved
+ * Copyright (C) 2022-2023 Cyface GmbH - All Rights Reserved
  *
  * This file is part of the Cyface API Library.
  *
@@ -16,12 +16,12 @@
  * You should have received a copy of the GNU General Public License
  * along with the Cyface API Library. If not, see <http://www.gnu.org/licenses/>.
  */
-package de.cyface.api;
+package de.cyface.api.v2;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import de.cyface.api.model.User;
+import de.cyface.api.v2.model.User;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonObject;
@@ -32,7 +32,7 @@ import io.vertx.ext.mongo.MongoClient;
  * Loads {@link User}s from the database for a vert.x context.
  *
  * @author Armin Schnabel
- * @version 1.0.0
+ * @version 1.0.1
  * @since 1.0.0
  */
 public class UserRetriever {

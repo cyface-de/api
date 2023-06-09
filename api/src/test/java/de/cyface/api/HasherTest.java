@@ -18,9 +18,7 @@
  */
 package de.cyface.api;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.charset.StandardCharsets;
 
@@ -51,7 +49,7 @@ public class HasherTest {
         final var result = oocut.hash(password);
 
         // Assert
-        assertThat("Compare generated hashcode", result, is(equalTo(
-                "$pbkdf2$U1VHQVI=$ZK4ZDOf9i3AibLO23RwmTmwfSe4qCQl0Mxl1zSPPW1+tF593v3Ip5RjiWU8j6M251AYjic8V/lhLsxukCpi/Ig")));
+        final var expected = "$pbkdf2$U1VHQVI=$ZK4ZDOf9i3AibLO23RwmTmwfSe4qCQl0Mxl1zSPPW1+tF593v3Ip5RjiWU8j6M251AYjic8V/lhLsxukCpi/Ig";
+        assertEquals(expected, result, "Compare generated hashcode");
     }
 }
