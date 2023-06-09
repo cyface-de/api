@@ -90,7 +90,6 @@ subprojects {
     // Versions of testing dependencies
     junitVersion = '5.9.2'
     mockitoVersion = '5.2.0'
-    hamcrestVersion = '2.2'
     flapdoodleVersion = '3.5.3' // major upgrade available
 
     jacocoVersion = '0.8.9'
@@ -110,7 +109,6 @@ subprojects {
     // Testing Dependencies
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testImplementation "org.junit.jupiter:junit-jupiter-params"  // Required for parameterized tests
-    testImplementation "org.hamcrest:hamcrest:$hamcrestVersion"
     testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"

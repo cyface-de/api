@@ -18,9 +18,8 @@
  */
 package de.cyface.api.v2;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,12 +29,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import de.cyface.api.AuthenticatedEndpointConfig;
-import de.cyface.api.DatabaseConstants;
-import de.cyface.api.EndpointConfig;
-import de.cyface.api.PauseAndResumeAfterBodyParsing;
 import org.apache.commons.lang3.Validate;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -44,6 +38,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import de.cyface.api.AuthenticatedEndpointConfig;
+import de.cyface.api.DatabaseConstants;
+import de.cyface.api.EndpointConfig;
+import de.cyface.api.PauseAndResumeAfterBodyParsing;
 import de.cyface.api.v2.model.Role;
 import de.cyface.api.v2.model.User;
 import de.cyface.apitestutils.TestMongoDatabase;
@@ -143,9 +141,9 @@ public class AuthorizationTest {
 
                         // Assert
                         final var expectedUsernames = env.getExpectedUsernames();
-                        assertThat(users, hasSize(expectedUsernames.size()));
-                        MatcherAssert.assertThat(users.stream().map(User::getName).collect(Collectors.toList()),
-                                hasItems(expectedUsernames.toArray(new String[0])));
+                        assertEquals(expectedUsernames.size(), users.size());
+                        assertArrayEquals(expectedUsernames.toArray(new String[0]),
+                                users.stream().map(User::getName).toArray());
                         testContext.completeNow();
                     }));
                     loadUsers.onFailure(testContext::failNow);
@@ -184,9 +182,9 @@ public class AuthorizationTest {
                         // Assert
                         final var expectedUsernames = List
                                 .of(new String[] {groupUser.getUsername(), groupManager.getUsername()});
-                        assertThat(users, hasSize(expectedUsernames.size()));
-                        MatcherAssert.assertThat(users.stream().map(User::getName).collect(Collectors.toList()),
-                                hasItems(expectedUsernames.toArray(new String[0])));
+                        assertEquals(expectedUsernames.size(), users.size());
+                        assertArrayEquals(expectedUsernames.toArray(new String[0]),
+                                users.stream().map(User::getName).toArray());
                         testContext.completeNow();
                     }));
                     loadUsers.onFailure(testContext::failNow);

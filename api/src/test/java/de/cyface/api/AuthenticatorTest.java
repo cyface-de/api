@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Cyface GmbH
+ * Copyright 2022-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -18,10 +18,15 @@
  */
 package de.cyface.api;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import org.junit.jupiter.api.Test;
 
 import io.vertx.core.Future;
 import io.vertx.core.http.HttpServerResponse;
@@ -30,14 +35,13 @@ import io.vertx.ext.auth.jwt.JWTAuth;
 import io.vertx.ext.auth.mongo.MongoAuthentication;
 import io.vertx.ext.web.RequestBody;
 import io.vertx.ext.web.RoutingContext;
-import org.junit.jupiter.api.Test;
 
 /**
  * This class checks the inner workings of the {@link Authenticator}.
  *
  * @author Armin Schnabel
  * @author Klemens Muthmann
- * @version 1.1.0
+ * @version 1.1.1
  * @since 1.0.0
  */
 @SuppressWarnings({"SpellCheckingInspection"})
@@ -59,9 +63,9 @@ public class AuthenticatorTest {
         final var createdResult = Authenticator.activated(createdPrincipal);
 
         // Assert
-        assertThat("Check activation", registeredResult, is(equalTo(false)));
-        assertThat("Check activation", activatedResult, is(equalTo(true)));
-        assertThat("Check activation", createdResult, is(equalTo(true)));
+        assertFalse(registeredResult, "Check activation");
+        assertTrue(activatedResult, "Check activation");
+        assertTrue(createdResult, "Check activation");
     }
 
     /**
@@ -87,7 +91,8 @@ public class AuthenticatorTest {
         when(mockBody.asJsonObject()).thenReturn(testCredentials);
         when(mockAuthentication.authenticate(any(JsonObject.class))).thenReturn(mockAuthenticationResult);
 
-        final var oocut = new Authenticator(mockAuthentication, mockAuthProvider, issuer, audience, tokenValidationTime);
+        final var oocut = new Authenticator(mockAuthentication, mockAuthProvider, issuer, audience,
+                tokenValidationTime);
 
         // Act
         oocut.handle(mockContext);

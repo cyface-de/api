@@ -18,9 +18,7 @@
  */
 package de.cyface.api.v2;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.stream.Stream;
 
@@ -50,7 +48,7 @@ public class RoleTest {
         final var oocut = new Role(parameters.databaseValue);
 
         // Assert
-        assertThat(oocut, is(equalTo(parameters.role)));
+        assertEquals(parameters.role, oocut);
     }
 
     @Test
@@ -72,7 +70,7 @@ public class RoleTest {
         final var oocut = parameters.role;
 
         // Assert
-        assertThat(oocut.databaseIdentifier(), is(equalTo(parameters.databaseValue)));
+        assertEquals(parameters.databaseValue, oocut.databaseIdentifier());
     }
 
     @Test

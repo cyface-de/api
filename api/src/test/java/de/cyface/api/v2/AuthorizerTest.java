@@ -19,9 +19,7 @@
 package de.cyface.api.v2;
 
 import static io.vertx.ext.auth.mongo.MongoAuthorization.DEFAULT_ROLE_FIELD;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,8 +29,6 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import de.cyface.api.DatabaseConstants;
-import de.cyface.api.PauseAndResumeAfterBodyParsing;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +38,8 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import de.cyface.api.DatabaseConstants;
+import de.cyface.api.PauseAndResumeAfterBodyParsing;
 import de.cyface.api.v2.model.Role;
 import de.cyface.api.v2.model.User;
 import io.vertx.core.Future;
@@ -92,7 +90,7 @@ public class AuthorizerTest {
         final var result = oocut.loadAccessibleUsers(principal).result();
 
         // Assert
-        assertThat(result, is(equalTo(parameters.expectedResult)));
+        assertEquals(parameters.expectedResult, result);
     }
 
     @ParameterizedTest
