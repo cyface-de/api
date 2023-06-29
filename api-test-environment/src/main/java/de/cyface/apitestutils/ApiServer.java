@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Cyface GmbH
+ * Copyright 2019-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -21,8 +21,6 @@ package de.cyface.apitestutils;
 import java.io.IOException;
 import java.net.ServerSocket;
 
-import org.apache.commons.lang3.Validate;
-
 import io.vertx.core.AsyncResult;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Future;
@@ -42,7 +40,7 @@ import io.vertx.junit5.VertxTestContext;
  *
  * @author Armin Schnabel
  * @author Klemens Muthmann
- * @version 3.0.1
+ * @version 4.0.0
  * @since 1.0.0
  */
 public final class ApiServer {
@@ -104,32 +102,14 @@ public final class ApiServer {
         port = socket.getLocalPort();
         socket.close();
 
-        final var privateTestKey = this.getClass().getResource("/private_key.pem");
-        final var publicTestKey = this.getClass().getResource("/public.pem");
         config.put("mongo.db", mongoDatabase.config())
                 .put("http.port", port)
-                .put("jwt.private", Validate.notNull(privateTestKey).getFile())
-                .put("jwt.public", Validate.notNull(publicTestKey).getFile())
                 .put("http.host", HTTP_HOST)
                 .put(httpEndpointParameterKey, httpEndpoint);
         final DeploymentOptions options = new DeploymentOptions().setConfig(config);
 
         vertx.deployVerticle(verticleClassName, options, testContext
                 .succeeding(result -> resultHandler.handle(Future.succeededFuture(WebClient.create(vertx)))));
-    }
-
-    /**
-     * Authenticates with the exporter server providing the received authentication token.
-     *
-     * @param client The client to use to access the server
-     * @param handler <code>Handler</code> called when the response has returned
-     */
-    public void authenticate(final WebClient client, final Handler<AsyncResult<HttpResponse<Buffer>>> handler) {
-        final JsonObject body = new JsonObject();
-        body.put("username", "admin");
-        body.put("password", "secret");
-
-        client.post(port(), HTTP_HOST, httpEndpoint + "login").sendJsonObject(body, handler);
     }
 
     /**
@@ -145,23 +125,15 @@ public final class ApiServer {
     public void get(final WebClient client, final String endpoint, final VertxTestContext testContext,
             final MultiMap headers, final Handler<AsyncResult<HttpResponse<Buffer>>> resultHandler) {
 
-        authenticate(client, testContext.succeeding(response -> {
-            final String authToken = response.getHeader("Authorization");
+        final String authToken = "eyTestToken";
 
-            if (response.statusCode() == 200 && authToken != null) {
-                final HttpRequest<Buffer> builder = client
-                        .get(port(), HTTP_HOST, httpEndpoint + endpoint)
-                        .authentication(new TokenCredentials(authToken));
-                if (headers.size() > 0) {
-                    builder.putHeaders(headers);
-                }
-                builder.send(resultHandler);
-            } else {
-                testContext.failNow(new IllegalStateException(String.format(
-                        "Unable to authenticate. Authentication request response status was %d with authentication token %s.",
-                        response.statusCode(), authToken)));
-            }
-        }));
+        final HttpRequest<Buffer> builder = client
+                .get(port(), HTTP_HOST, httpEndpoint + endpoint)
+                .authentication(new TokenCredentials(authToken));
+        if (headers.size() > 0) {
+            builder.putHeaders(headers);
+        }
+        builder.send(resultHandler);
     }
 
     /**

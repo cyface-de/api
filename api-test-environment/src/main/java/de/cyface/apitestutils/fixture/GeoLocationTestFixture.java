@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Cyface GmbH
+ * Copyright 2020-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -19,9 +19,9 @@
 package de.cyface.apitestutils.fixture;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import de.cyface.apitestutils.fixture.user.DirectTestUser;
 import de.cyface.model.MeasurementIdentifier;
 import io.vertx.core.CompositeFuture;
 import io.vertx.core.Future;
@@ -29,7 +29,7 @@ import io.vertx.core.Promise;
 import io.vertx.ext.mongo.MongoClient;
 
 /**
- * A fixture providing data to use for testing the raw geo-location export.
+ * A fixture providing data to use for testing the raw geographical location export.
  * <p>
  * Inserts a test {@link DatabaseConstants#GROUP_MANAGER_ROLE_SUFFIX} user and a test
  * {@link DatabaseConstants#USER_GROUP_ROLE_SUFFIX} user and references the group user as data owner in the created
@@ -39,7 +39,7 @@ import io.vertx.ext.mongo.MongoClient;
  *
  * @author Klemens Muthmann
  * @author Armin Schnabel
- * @version 4.0.1
+ * @version 5.0.0
  * @since 1.0.0
  */
 @SuppressWarnings("unused") // API
@@ -74,29 +74,21 @@ public final class GeoLocationTestFixture implements TestFixture {
     @Override
     public Future<String> insertTestData(MongoClient mongoClient) {
 
-        final var manager = new DirectTestUser(TEST_USER_NAME, "secret",
-                TEST_GROUP + DatabaseConstants.GROUP_MANAGER_ROLE_SUFFIX);
-        final var groupUser = new DirectTestUser(TEST_GROUP_USER_USERNAME, "secret",
-                TEST_GROUP + DatabaseConstants.USER_GROUP_ROLE_SUFFIX);
-        final var managerInsert = manager.insert(mongoClient);
-        final var userInsert = groupUser.insert(mongoClient);
+        // Insert of test group manager and -user removed after switching to OAuth
+        final var userId = UUID.randomUUID().toString();
 
         final Promise<String> promise = Promise.promise();
-        userInsert.onSuccess(userId -> {
-            final var testDocuments = testMeasurementIdentifiers.stream().map(
-                    id -> new TestMeasurementDocument(userId, id.getMeasurementIdentifier(), id.getDeviceIdentifier()))
-                    .collect(Collectors.toList());
+        final var testDocuments = testMeasurementIdentifiers.stream().map(
+                id -> new TestMeasurementDocument(userId, id.getMeasurementIdentifier(), id.getDeviceIdentifier()))
+                .collect(Collectors.toList());
 
-            // noinspection rawtypes
-            final var futures = testDocuments.stream().map(d -> (Future)d.insert(mongoClient))
-                    .collect(Collectors.toList());
-            futures.add(managerInsert);
+        // noinspection rawtypes
+        final var futures = testDocuments.stream().map(d -> (Future)d.insert(mongoClient))
+                .collect(Collectors.toList());
 
-            final CompositeFuture composition = CompositeFuture.all(futures);
-            composition.onSuccess(succeeded -> promise.complete(userId));
-            composition.onFailure(promise::fail);
-        });
-        userInsert.onFailure(promise::fail);
+        final CompositeFuture composition = CompositeFuture.all(futures);
+        composition.onSuccess(succeeded -> promise.complete(userId));
+        composition.onFailure(promise::fail);
 
         return promise.future();
     }

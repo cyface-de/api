@@ -1,5 +1,5 @@
 /*
- * Copyright 2019-2022 Cyface GmbH
+ * Copyright 2019-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -22,7 +22,7 @@ package de.cyface.apitestutils.fixture;
  * Constants used in the database containing the compressed serialized data received from clients.
  *
  * @author Armin Schnabel
- * @version 1.2.1
+ * @version 1.3.0
  * @since 1.0.0
  */
 public class DatabaseConstants {
@@ -46,19 +46,11 @@ public class DatabaseConstants {
     /**
      * The database collection name.
      */
-    public static final String COLLECTION_USER = "user";
-    /**
-     * The database collection name.
-     */
     public static final String COLLECTION_FILES = "fs.files";
     /**
      * The database collection name.
      */
     public static final String COLLECTION_CHUNKS = "fs.chunks";
-    /**
-     * The database field name.
-     */
-    public static final String USER_USERNAME_FIELD = "username";
     /**
      * The database field name used to annotate the owner of data by its user id.
      */

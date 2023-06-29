@@ -1,5 +1,5 @@
 /*
- * Copyright 2018-2022 Cyface GmbH
+ * Copyright 2018-2023 Cyface GmbH
  *
  * This file is part of the Cyface API Library.
  *
@@ -28,9 +28,10 @@ import org.slf4j.LoggerFactory;
  *
  * @author Klemens Muthmann
  * @author Armin Schnabel
- * @version 1.1.1
+ * @version 1.1.2
  * @since 1.0.0
  */
+@SuppressWarnings("unused") // Part of the API (used by collector, provider, ...)
 public final class FailureHandler implements Handler<RoutingContext> {
 
     /**
