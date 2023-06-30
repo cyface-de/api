@@ -22,6 +22,8 @@ import de.cyface.apitestutils.TestEnvironment;
 import io.vertx.core.Future;
 import io.vertx.ext.mongo.MongoClient;
 
+import java.util.UUID;
+
 /**
  * A provider for test fixture data. Such a provider is required by {@link TestEnvironment} instances.
  *
@@ -37,5 +39,5 @@ public interface TestFixture {
      * @param mongoClient The client to access the Mongo database hosting the test data
      * @return A {@code Future} which is resolved after inserting the data has completed
      */
-    Future<String> insertTestData(final MongoClient mongoClient);
+    Future<UUID> insertTestData(final MongoClient mongoClient);
 }

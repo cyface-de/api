@@ -38,11 +38,13 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 
+import java.util.UUID;
+
 /**
  * A test document inside the Mongo database which contains an unpacked (deserialized) measurement.
  *
  * @author Armin Schnabel
- * @version 3.0.1
+ * @version 4.0.0
  * @since 1.0.0
  */
 public final class TestMeasurementDocument implements MongoTestData {
@@ -50,7 +52,7 @@ public final class TestMeasurementDocument implements MongoTestData {
     /**
      * The id of the user who uploaded the file.
      */
-    private final String ownerUserId;
+    private final UUID ownerUserId;
     /**
      * The identifier of the measurement encoded in the file.
      */
@@ -72,15 +74,11 @@ public final class TestMeasurementDocument implements MongoTestData {
      * @param measurementIdentifier The identifier of the measurement encoded in the file
      * @param deviceIdentifier The worldwide unique identifier of the device the document comes from
      */
-    public TestMeasurementDocument(final String ownerUserId, final Long measurementIdentifier,
-            final String deviceIdentifier) {
-        Validate.notEmpty(ownerUserId);
-        Validate.notNull(measurementIdentifier);
-        Validate.notEmpty(deviceIdentifier);
-
-        this.ownerUserId = ownerUserId;
-        this.measurementIdentifier = measurementIdentifier;
-        this.deviceIdentifier = deviceIdentifier;
+    public TestMeasurementDocument(final UUID ownerUserId, final Long measurementIdentifier,
+                                   final String deviceIdentifier) {
+        this.ownerUserId = Validate.notNull(ownerUserId);
+        this.measurementIdentifier = Validate.notNull(measurementIdentifier);
+        this.deviceIdentifier = Validate.notEmpty(deviceIdentifier);
     }
 
     @Override
@@ -93,7 +91,7 @@ public final class TestMeasurementDocument implements MongoTestData {
                 .put(METADATA_OS_VERSION_FIELD, "Android 9.0.0")
                 .put(METADATA_APP_VERSION_FIELD, "1.2.0")
                 .put(METADATA_LENGTH_FIELD, 1500.2)
-                .put(USER_ID_FIELD, new JsonObject().put("$oid", ownerUserId)) // new ObjectId() not supported
+                .put(USER_ID_FIELD, ownerUserId) // new ObjectId() not supported
                 .put(METADATA_VERSION_FIELD, "2.0.0");
 
         final JsonArray geoLocations = new JsonArray();

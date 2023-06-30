@@ -19,6 +19,7 @@
 package de.cyface.apitestutils;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import de.cyface.apitestutils.fixture.TestFixture;
 import io.vertx.core.AsyncResult;
@@ -133,7 +134,7 @@ public final class TestEnvironment {
      * @return A {@code Future} which is resolves to the id of the created entry if successful.
      */
     @SuppressWarnings("unused") // API
-    public Future<String> insertFixture(final TestFixture fixture) {
+    public Future<UUID> insertFixture(final TestFixture fixture) {
         return fixture.insertTestData(mongoClient);
     }
 
