@@ -72,12 +72,12 @@ public final class GeoLocationTestFixture implements TestFixture {
     }
 
     @Override
-    public Future<String> insertTestData(MongoClient mongoClient) {
+    public Future<UUID> insertTestData(MongoClient mongoClient) {
 
         // Insert of test group manager and -user removed after switching to OAuth
-        final var userId = UUID.randomUUID().toString();
+        final var userId = UUID.randomUUID();
 
-        final Promise<String> promise = Promise.promise();
+        final Promise<UUID> promise = Promise.promise();
         final var testDocuments = testMeasurementIdentifiers.stream().map(
                 id -> new TestMeasurementDocument(userId, id.getMeasurementIdentifier(), id.getDeviceIdentifier()))
                 .collect(Collectors.toList());
