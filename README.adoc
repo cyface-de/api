@@ -19,9 +19,7 @@ The following sections provide an overview about those projects.
 
 == Overview
 
-.link:#_libraries[Libraries]
 * link:#_api[API]
-* link:#_api-test-environment[API Test Environment]
 
 .General information
 * link:#_release_a_new_version[Release a new Version]
@@ -29,17 +27,10 @@ The following sections provide an overview about those projects.
 * link:#_licensing[Licensing]
 
 
-== Libraries
-
 [#_api]
-=== API
+== API
 
 Vert.X classes shared between multiple Cyface Vert.X API projects.
-
-[#_api-test-environment]
-=== API Test Environment
-
-Vert.X test classes shared between multiple Cyface Vert.X API projects.
 
 
 [#_release_a_new_version]
