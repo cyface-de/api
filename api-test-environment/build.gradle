@@ -11,8 +11,6 @@
  */
 
 dependencies {
-  implementation "de.cyface:model:$cyfaceSerializationVersion"
-
   implementation "io.vertx:vertx-mongo-client:$vertxVersion"
 
   // Authentication
